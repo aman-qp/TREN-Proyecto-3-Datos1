@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
 import { GetTrainRoutes } from './services/TrainRouteService';
 import { useEffect, useState } from 'react';
+import TrainMap from './TrainMap';
 
 function App() {
   const [routes, setRoutes] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date().toLocaleString());
   
+  const updateRoutes = async () => {
+    let newRoutes = await GetTrainRoutes();
+    setRoutes(newRoutes);
+  };
+
   useEffect(() => {
-    async function loadData() {
-      let routes = await GetTrainRoutes();
-      setRoutes(routes);
-    }
-
-    setInterval(() => {
+    const interval = setInterval(() => {
       setCurrentTime(Date().toLocaleString());
-    }, 1000)
+    }, 1000);
 
-    setInterval(() => {
-      loadData();
-    }, 5000)
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    updateRoutes();
+
+    const interval = setInterval(() => {
+      updateRoutes();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -34,15 +42,21 @@ function App() {
             <th>Distance</th>
           </tr>
         </thead>
-      {routes.map((element, index) => 
-        <tr id={index}>
-          <td>{element.start}</td>
-          <td>{element.end}</td>
-          <td>{element.cost}</td>
-          <td>{element.distanceInKm}</td>
-        </tr>
-      )}    
+        <tbody>
+          {routes.map((element, index) => 
+            <tr key={index}>
+              <td>{element.start}</td>
+              <td>{element.end}</td>
+              <td>{element.cost}</td>
+              <td>{element.distanceInKm}</td>
+            </tr>
+          )}
+        </tbody>
       </table>  
+      <div className="train-map-container">
+        <TrainMap routes={routes} />
+        <svg id="train-map" width="1200" height=""></svg>
+      </div>
     </div>
   );
 }
