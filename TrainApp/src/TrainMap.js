@@ -7,9 +7,9 @@ function TrainMap({ routes }) {
   useEffect(() => {
     const svg = d3.select(svgRef.current);
 
-    const margin = { top: 20, right: 20, bottom: 20, left: 20 };
+    const margin = { top: -5, right: 20, bottom: 200, left: 20 };
     const width = 800 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const height = 1200 - margin.top - margin.bottom;
 
     svg.selectAll("*").remove();
 
@@ -135,7 +135,7 @@ function TrainMap({ routes }) {
   }
 
   return (
-    <svg ref={svgRef} id="train-map" width="800" height="600"></svg>
+    <svg ref={svgRef} id="train-map" width="1200" height="1300"></svg>
   );
 }
 

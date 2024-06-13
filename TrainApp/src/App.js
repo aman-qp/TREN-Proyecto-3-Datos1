@@ -6,26 +6,20 @@ import TrainMap from './TrainMap';
 function App() {
   const [routes, setRoutes] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date().toLocaleString());
-  
+
   const updateRoutes = async () => {
     let newRoutes = await GetTrainRoutes();
     setRoutes(newRoutes);
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(Date().toLocaleString());
-    }, 1000);
-
-    return () => clearInterval(interval);
+    updateRoutes();
   }, []);
 
   useEffect(() => {
-    updateRoutes();
-
     const interval = setInterval(() => {
-      updateRoutes();
-    }, 5000);
+      setCurrentTime(Date().toLocaleString());
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -43,7 +37,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {routes.map((element, index) => 
+          {routes.map((element, index) =>
             <tr key={index}>
               <td>{element.start}</td>
               <td>{element.end}</td>
@@ -52,10 +46,10 @@ function App() {
             </tr>
           )}
         </tbody>
-      </table>  
+      </table>
       <div className="train-map-container">
         <TrainMap routes={routes} />
-        <svg id="train-map" width="1200" height=""></svg>
+        <svg id="train-map" width="1200" height="1500"></svg>
       </div>
     </div>
   );
