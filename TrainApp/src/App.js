@@ -37,24 +37,20 @@ function App() {
   };
 
   const handleAddRoute = async () => {
-    await AddTrainRoute(newRoute);
+    const route = { ...newRoute, cost: newRoute.distanceInKm * 25 };
+    await AddTrainRoute(route);
     updateRoutes();
     setNewRoute({ start: '', end: '', cost: '', distanceInKm: '' });
   };
 
   const handleDeleteRoute = async (routeId) => {
-    const route = routes.find(route => route.id === routeId);
-    if (route && !route.hasActiveTickets) {
-      await DeleteTrainRoute(routeId);
-      updateRoutes();
-    } else {
-      alert('No se puede eliminar una ruta con tickets activos.');
-    }
+    await DeleteTrainRoute(routeId);
+    updateRoutes();
   };
 
   const handleModifyRoute = async (routeId) => {
-    const newCost = prompt('Nuevo costo:');
-    const newDistance = prompt('Nueva distancia:');
+    const newDistance = prompt('Nueva distancia (km):');
+    const newCost = newDistance * 25;
     if (newCost !== null && newDistance !== null) {
       await ModifyTrainRoute(routeId, { cost: newCost, distanceInKm: newDistance });
       updateRoutes();
@@ -154,12 +150,6 @@ function App() {
             placeholder="Fin" 
             value={newRoute.end} 
             onChange={(e) => setNewRoute({ ...newRoute, end: e.target.value })} 
-          />
-          <input 
-            type="number" 
-            placeholder="Costo" 
-            value={newRoute.cost} 
-            onChange={(e) => setNewRoute({ ...newRoute, cost: e.target.value })} 
           />
           <input 
             type="number" 
